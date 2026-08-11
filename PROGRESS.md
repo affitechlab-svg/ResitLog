@@ -17,9 +17,9 @@ lihat `CLAUDE.md` §7). Fasa di bawah ikut `09-BUILD-PHASES.md` rasmi.
 - ✅ 0.10 `DEV-LOG.md` dan `PROGRESS.md` wujud dan berfungsi
 - ✅ **Siap bila:** `npm run build`/`dev` jalan tanpa ralat, halaman ujian papar Archivo + maroon `#6e1428` betul (disahkan dengan screenshot pelayar)
 
-## FASA 1 — Komponen UI asas ⬜ Belum
-- ⬜ `Butang`, `Medan`, `Chip` (isi/garis/garis putus), `SegmentedControl`, `TabBar`, `Dialog`, `BlokPoster`, `KeadaanKosong`
-- ⬜ Halaman ujian bandingkan sebelah-menyebelah dengan `ResitLog_UI_dc.html`
+## FASA 1 — Komponen UI asas ✅ Siap
+- ✅ `Butang`, `Medan`, `Chip` (isi/garis/garis putus/tint), `SegmentedControl`, `TabBar`, `Dialog`, `BlokPoster`, `KeadaanKosong`
+- ✅ Halaman ujian `/ujian-komponen` — disahkan dengan screenshot pelayar
 
 ## FASA 2 — Masuk manual + simpan ⬜ Belum
 - ⬜ `/utama` (versi ringkas), `/manual` penuh, simpan ke state dummy

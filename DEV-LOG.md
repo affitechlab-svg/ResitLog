@@ -4,6 +4,39 @@ Log pembangunan ResitLog. Entri terbaru di atas, ikut format dalam `CLAUDE.md` �
 
 ---
 
+## [2026-08-11 21:30] — Fasa 1: Komponen UI asas
+
+**Fasa:** 1 — Komponen UI asas
+**Status:** Siap
+
+### Apa yang dibuat
+- Bina 8 komponen dalam `komponen/ui/`: `Butang`, `Medan`, `Chip`, `SegmentedControl`, `TabBar`, `Dialog`, `BlokPoster`, `KeadaanKosong` + barrel export `index.ts`.
+- Cipta halaman ujian `/ujian-komponen` yang memaparkan semua komponen (semua varian) untuk banding dengan `ResitLog_UI_dc.html`.
+- Sahkan dalam browser (screenshot penuh + interaksi Dialog "taip ulang PADAM"): sudut tajam, warna token, fon Archivo 800, label rata kiri, dan logik nyahaktif/aktif semua betul.
+
+### Fail disentuh
+- `komponen/ui/Butang.tsx` — varian `utama` (maroon), `ink`, `garis`; tinggi boleh ubah; nyahaktif opacity 0.45
+- `komponen/ui/Medan.tsx` — input berlabel, varian `tegas` (sempadan maroon untuk medan Jumlah), ralat berkait `aria-describedby`
+- `komponen/ui/Chip.tsx` — varian `isi`, `garis`, `garis-putus`, `tint`; render `<span>` bila statik, `<button>` bila interaktif
+- `komponen/ui/SegmentedControl.tsx` — untuk Cara Bayar dan Bulanan/Tahunan, sokong ikon kunci
+- `komponen/ui/TabBar.tsx` — 4 destinasi ikut `03-SITEMAP-ROUTING.md`, guna `usePathname` untuk keadaan aktif
+- `komponen/ui/Dialog.tsx` — pengesahan biasa + mod taip-ulang-teks (BR-08)
+- `komponen/ui/BlokPoster.tsx` — varian besar (skrin Utama, 52px) dan kecil (skrin Ringkasan, 34px)
+- `komponen/ui/KeadaanKosong.tsx` — tajuk + mesej tindakan + slot aksi
+- `app/ujian-komponen/page.tsx` — halaman ujian (baru, sementara — bukan laluan rasmi)
+
+### Keputusan yang diambil
+- **`SegmentedControl` diberi prop `warnaAktif` (`ink` | `maroon`)** kerana rujuk reka bentuk sendiri tidak konsisten: keadaan aktif "Cara Bayar" pada skrin Semak guna maroon, tetapi "Bulanan/Tahunan" pada skrin Ringkasan guna ink. Dua contoh sebenar dalam `ResitLog_UI_dc.html`, bukan andaian — jadi dibuat boleh ubah ikut konteks panggilan, bukan dipaksa satu warna.
+- **Varian Butang `ink` guna opacity untuk hover/tekan** (bukan warna baru) kerana `CLAUDE.md` §1.2 hanya bagi token hover/tekan untuk varian maroon. Elak reka warna yang tiada dalam spesifikasi.
+- **Chip render sebagai `<span>` (statik) atau `<button>` (bila ada `onClick`)** — elak `<button>` bersarang dalam baris yang sudah boleh diklik (cth. baris rekod), dan kekal boleh tekan bila memang perlu (pemilih kategori).
+- **Halaman `/ujian-komponen` bukan laluan rasmi** — tiada dalam `03-SITEMAP-ROUTING.md`. Disediakan semata-mata untuk QA visual Fasa 1 (arahan eksplisit dalam `09-BUILD-PHASES.md`: "satu halaman ujian memaparkan semua komponen"). Boleh dibuang atau digantikan pintu masuk dev sebelum pelancaran.
+
+### Masalah / tersekat
+- Tiada.
+
+### Langkah seterusnya
+- Mula Fasa 2: skrin Utama (versi ringkas) + Masuk Manual penuh, simpan ke state dummy dalam memori.
+
 ## [2026-08-11 21:05] — Terima 09-BUILD-PHASES.md + tukar hosting ke Railway
 
 **Fasa:** 0 — Asas projek
