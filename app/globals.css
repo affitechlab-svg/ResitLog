@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+/* Token reka bentuk ResitLog — rujuk CLAUDE.md §1.2. Jangan tukar nilai di sini
+   tanpa kemas kini CLAUDE.md dahulu; ia mesti sepadan. */
+@theme {
+  --color-ink: #201e1d;
+  --color-ground: #f6f5f4;
+  --color-surface: #eae9e9;
+  --color-maroon: #6e1428;
+  --color-maroon-pressed: #4a0d1b;
+  --color-maroon-hover: #5d1122;
+  --color-maroon-tint: #f0e4e7;
+  --color-on-tint: #5c3a41;
+  --color-muted: #6d6a68;
+  --color-disabled: #8a8785;
+  --color-hairline: #d5d3d2;
+  --color-field-border: #cbc9c8;
+
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+}
+
+/* Reka bentuk Modernist: sudut tajam, tiada bayang, di mana-mana — tiada pengecualian.
+   Dikuatkuasakan di sini (bukan hanya dibiarkan sebagai tabiat) supaya tiada kelas
+   Tailwind atau gaya inline boleh terlepas pandang peraturan ini secara tidak sengaja. */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+html,
+body {
+  background: var(--color-ground);
+  color: var(--color-ink);
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-maroon);
+  outline-offset: 2px;
+}
