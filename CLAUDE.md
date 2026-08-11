@@ -15,7 +15,7 @@ Dokumen rujukan dalam folder ini:
 |---|---|
 | `CLAUDE.md` | Fail ini — peraturan build |
 | `01-PRD.md` | Skop, ciri, business rules, katalog kategori |
-| `02-TECH-STACK.md` | Next.js + Tailwind + Supabase + Vercel |
+| `02-TECH-STACK.md` | Next.js + Tailwind + Supabase + Railway |
 | `03-SITEMAP-ROUTING.md` | Senarai page dan laluan URL |
 | `04-DATA-MODEL.md` | Jadual, medan, hubungan, seed data |
 | `05-USER-FLOWS.md` | Langkah pengguna |
@@ -177,7 +177,8 @@ Bar kemajuan pada skrin Sedang Baca mesti **bergerak sebenar** mengikut keadaan 
 
 ## 7. Nota persekitaran pembangunan semasa *(tambahan, bukan dari handoff asal)*
 
-- **Peringkat sekarang: bina di tempatan (local) guna data dummy** (`lib/dummy-data.ts`). Supabase (Auth + DB + Storage) dan panggilan Claude API sebenar **disambung last**, sebagai fasa berasingan — bukan pada setiap fasa UI.
+- **Peringkat sekarang: bina di tempatan (local) guna data dummy** (`lib/data-dummy.ts`, dibaca melalui `lib/data.ts`). Supabase (Auth + DB + Storage) dan panggilan Claude API sebenar **disambung last**, sebagai fasa berasingan (Fasa 7) — bukan pada setiap fasa UI. Ikut turutan penuh dalam `09-BUILD-PHASES.md`.
 - Tailwind versi projek ini ialah **v4** (bukan v3 seperti contoh `tailwind.config.ts` dalam `02-TECH-STACK.md`). Token warna didaftarkan melalui `@theme` dalam `app/globals.css`, bukan fail `tailwind.config.ts`. Nilai token **sama persis** dengan jadual di §1.2 — hanya cara daftar yang berbeza. `border-radius: 0` dan `box-shadow: none` dikuatkuasakan secara global dalam `globals.css` (bukan setakat konfigurasi Tailwind) supaya tiada kelas atau gaya inline boleh terlepas pandang peraturan ini.
 - Cawangan kerja: `claude/new-separate-project-wbvswm` pada repo `affitechlab-svg/ResitLog`. Jangan sentuh atau rujuk repo Nexmet / Nexmet-AI.
-- `09-BUILD-PHASES.md` belum diterima setakat entri log pertama — pecahan fasa dicadang sementara dalam `DEV-LOG.md` dan `PROGRESS.md`, tertakluk pengesahan pemilik projek.
+- **Nama fail log:** `09-BUILD-PHASES.md` sebut `WORK-LOG.md` sebagai fail log; §3 di atas mewajibkan `DEV-LOG.md` dengan format tertentu. Kerana §3 di fail ini (`CLAUDE.md`) yang menang bila bercanggah (rujuk baris pertama dokumen ini), **`DEV-LOG.md` ialah fail log rasmi** — bukan dua fail berasingan. Dicatat di sini dan dalam `DEV-LOG.md` supaya keputusan ini jelas, bukan senyap.
+- Hosting: **Railway** (bukan Vercel). Repo GitHub kekal sama; hanya platform deploy dan pemboleh ubah persekitaran yang berbeza (Fasa 10). Tiada kesan pada kod setakat ini.

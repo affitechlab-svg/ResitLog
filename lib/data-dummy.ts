@@ -1,4 +1,4 @@
-// Data dummy untuk pembangunan tempatan sahaja. TIDAK digunakan bila Supabase disambung.
+// Seed data mentah sahaja. Skrin JANGAN import fail ini terus — guna lib/data.ts.
 // Angka diambil terus dari 04-DATA-MODEL.md §8 supaya UI yang dibina boleh dibanding
 // terus dengan rujukan reka bentuk (ResitLog_UI_dc.html).
 
@@ -136,10 +136,3 @@ export const ITEM_UJIAN: Item[] = [
 
   { id: "item-120-1", resitId: "resit-120", nama: "Bil elektrik Julai", harga: 132.60, kategori: "utiliti", pemilik: "bersama", susunan: 0 },
 ];
-
-export function resitPenuhUjian() {
-  return RESIT_UJIAN.map((r) => ({
-    ...r,
-    item: ITEM_UJIAN.filter((i) => i.resitId === r.id),
-  }));
-}

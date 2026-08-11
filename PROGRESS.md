@@ -1,61 +1,55 @@
 # PROGRESS
 
 Papan status peringkat tinggi. Log terperinci setiap tugasan ada dalam `DEV-LOG.md`
-(itulah fail wajib ikut `CLAUDE.md`). Fail ini untuk pandangan pantas sahaja.
+(fail wajib ikut `CLAUDE.md` §3 — gantikan rujukan "WORK-LOG.md" dalam `09-BUILD-PHASES.md`,
+lihat `CLAUDE.md` §7). Fasa di bawah ikut `09-BUILD-PHASES.md` rasmi.
 
-> **Nota:** `09-BUILD-PHASES.md` belum diterima daripada pemilik projek. Pecahan fasa
-> di bawah ini **cadangan sementara** berdasarkan dokumen 01–06 + susunan yang diminta
-> ("local + dummy data dulu, Supabase last"). Sila sahkan atau betulkan sebelum Fasa 1 bermula.
+## FASA 0 — Asas projek ✅ Siap
+- ✅ 0.1 Next.js 15 + TypeScript strict + Tailwind
+- ✅ 0.2 Token warna (via `@theme` dalam `globals.css`, bukan `tailwind.config.ts` — radius/bayang dimatikan global; lihat `CLAUDE.md` §7)
+- ✅ 0.3 Font Archivo via `next/font/google`
+- ✅ 0.4 `lucide-react` dipasang
+- ✅ 0.5 Struktur folder ikut `02-TECH-STACK.md`
+- ✅ 0.6 `lib/kategori.ts`
+- ✅ 0.7 `lib/format.ts`
+- ✅ 0.8 `jenis/index.ts`
+- ✅ 0.9 `lib/data-dummy.ts` (seed data) + `lib/data.ts` (lapisan capaian data)
+- ✅ 0.10 `DEV-LOG.md` dan `PROGRESS.md` wujud dan berfungsi
+- ✅ **Siap bila:** `npm run build`/`dev` jalan tanpa ralat, halaman ujian papar Archivo + maroon `#6e1428` betul (disahkan dengan screenshot pelayar)
 
-## Fasa 0 — Setup projek ✅ Siap
-- ✅ Terima & simpan dokumen spesifikasi (01–06, CLAUDE.md, rujukan UI)
-- ✅ Scaffold Next.js 15 + TypeScript + Tailwind v4 + ESLint
-- ✅ Token reka bentuk, fon Archivo, reset radius/shadow
-- ✅ Struktur folder (`komponen/`, `lib/`, `jenis/`)
-- ✅ Taip data teras (`jenis/index.ts`) + katalog kategori
-- ✅ Data dummy (`lib/dummy-data.ts`) daripada seed data rasmi
-- ✅ `npm run build` disahkan berjaya
+## FASA 1 — Komponen UI asas ⬜ Belum
+- ⬜ `Butang`, `Medan`, `Chip` (isi/garis/garis putus), `SegmentedControl`, `TabBar`, `Dialog`, `BlokPoster`, `KeadaanKosong`
+- ⬜ Halaman ujian bandingkan sebelah-menyebelah dengan `ResitLog_UI_dc.html`
 
-## Fasa 1 — Aliran auth (UI + dummy, tiada Supabase lagi) ⬜ Belum
-- ⬜ `/mula`, `/daftar`, `/log-masuk` (UI sahaja — "log masuk" guna pengguna ujian tetap)
-- ⬜ `/pasang` (skrin tambah ke skrin utama)
-- ⬜ Layout `(app)` + tab bar 4 destinasi
+## FASA 2 — Masuk manual + simpan ⬜ Belum
+- ⬜ `/utama` (versi ringkas), `/manual` penuh, simpan ke state dummy
 
-## Fasa 2 — Skrin Utama ⬜ Belum
-- ⬜ `/utama` dengan jumlah bulan ini, resit terkini (data dummy)
+## FASA 3 — Rekod dan butiran ⬜ Belum
+- ⬜ `/rekod`, `/rekod/[id]`, carian, padam
 
-## Fasa 3 — Snap & Semak resit ⬜ Belum
-- ⬜ `/semak` (dua keadaan: Sedang Baca + Semak) — guna hasil "bacaan" tiruan (mock), bukan panggilan Claude API sebenar lagi
-- ⬜ Kompresi gambar, validasi kategori wajib, kiraan jumlah vs beza
+## FASA 4 — Ringkasan bulanan ⬜ Belum
+- ⬜ `/ringkasan` (Bulanan), penafian cukai
+- **Checkpoint:** tunjuk pada pemilik projek sebelum teruskan ke Fasa 5
 
-## Fasa 4 — Masuk manual ⬜ Belum
-- ⬜ `/manual`
+## FASA 5 — Snap resit dan skrin Semak ⬜ Belum
+- ⬜ 5A: `/semak` dengan data palsu
+- ⬜ 5B: kamera/album + mampat gambar + skrin Sedang Baca
+- ⬜ 5C: `/api/baca-resit` sebenar *(perlu `ANTHROPIC_API_KEY` daripada pemilik projek)*
 
-## Fasa 5 — Rekod & Butiran ⬜ Belum
-- ⬜ `/rekod` (senarai ikut bulan + carian)
-- ⬜ `/rekod/[id]` (butiran + gambar)
+## FASA 6 — Skrin selebihnya ⬜ Belum
+- ⬜ `/mula`, `/daftar`, `/log-masuk` (paparan sahaja), `/tetapan`, `/pasang`, manifest PWA
 
-## Fasa 6 — Ringkasan ⬜ Belum
-- ⬜ `/ringkasan` (Bulanan + Tahunan/paywall)
+## FASA 7 — Supabase (data sebenar) ⬜ Belum
+- ⬜ Projek Supabase, migrasi SQL + RLS, Storage, Auth (emel/Google/Apple), middleware
+- ⬜ Tukar `lib/data.ts` daripada dummy ke Supabase — skrin tidak berubah
+- *(Pemilik projek: buka akaun Supabase, salin kunci ke `.env.local`, daftar OAuth app)*
 
-## Fasa 7 — Dashboard AI Insight ⬜ Belum
-- ⬜ `/ringkasan/dashboard` (keadaan aktif + terkunci)
+## FASA 8 — Premium ⬜ Belum
+- ⬜ Ringkasan Tahunan, paywall, eksport Excel, mod pasangan, bayaran
+- *(Harga RM9/bulan belum disahkan — sahkan sebelum bina bahagian bayaran)*
 
-## Fasa 8 — Tetapan ⬜ Belum
-- ⬜ `/tetapan` (termasuk padam semua data — dummy dahulu)
+## FASA 9 — Dashboard AI Insight ⬜ Belum *(boleh ditangguh selepas pelancaran)*
 
-## Fasa 9 — PWA ⬜ Belum
-- ⬜ Manifest, ikon, service worker shell cache
-
-## Fasa 10 — Sambung Supabase sebenar ⬜ Belum
-- ⬜ Auth (emel/kata laluan, Google, Apple)
-- ⬜ Jadual + RLS ikut `04-DATA-MODEL.md`
-- ⬜ Storage (bucket peribadi, signed URL)
-- ⬜ Ganti semua data dummy dengan data sebenar
-
-## Fasa 11 — Sambung Claude API sebenar ⬜ Belum
-- ⬜ `/api/baca-resit` panggil Anthropic API betul-betul (ganti mock Fasa 3)
-
-## Fasa 12 — QA & pelancaran ⬜ Belum
-- ⬜ Checklist penuh `06-ACCEPTANCE-CRITERIA.md`
-- ⬜ Ujian sendiri 14 hari (per `01-PRD.md` §10)
+## FASA 10 — Hosting dan pelancaran (Railway) ⬜ Belum
+- ⬜ Putuskan sambungan Vercel → sambung Railway → domain `resitlog.my`
+- *(Pemilik projek: daftar akaun Railway, plan Hobby + kad kredit, beli domain MYNIC)*

@@ -4,6 +4,42 @@ Log pembangunan ResitLog. Entri terbaru di atas, ikut format dalam `CLAUDE.md` �
 
 ---
 
+## [2026-08-11 21:05] — Terima 09-BUILD-PHASES.md + tukar hosting ke Railway
+
+**Fasa:** 0 — Asas projek
+**Status:** Siap
+
+### Apa yang dibuat
+- Simpan `09-BUILD-PHASES.md` rasmi ke akar repo (belum wujud sebelum ini).
+- Gantikan `02-TECH-STACK.md` dengan versi kemas kini: hosting **Railway** (bukan Vercel).
+- Kemas kini `CLAUDE.md`: baris rujukan `02-TECH-STACK.md` sebut Railway; §7 ditambah nota Railway + resolusi nama fail log.
+- Tulis semula `PROGRESS.md` mengikut pecahan Fasa 0–10 **rasmi** daripada `09-BUILD-PHASES.md`, gantikan cadangan sementara sesi lepas.
+- Namakan semula `lib/dummy-data.ts` → `lib/data-dummy.ts` (padan dengan nama fail dalam `09-BUILD-PHASES.md` §"Data dummy").
+- Cipta `lib/data.ts` — lapisan capaian data tunggal (`penggunaSemasa()`, `senaraiResitPenuh()`, `resitPenuhMengikutId()`) yang dibaca daripada `lib/data-dummy.ts` buat masa ini; fungsi ini sahaja akan ditukar pada Fasa 7, ikut prinsip dalam `09-BUILD-PHASES.md`.
+- Buang fungsi `resitPenuhUjian()` yang bertindih daripada `lib/data-dummy.ts` (kini hanya seed data mentah).
+- Jalankan `npm run build` semula — sahkan tiada ralat selepas perubahan.
+
+### Fail disentuh
+- `09-BUILD-PHASES.md` — baru, disalin daripada dokumen rasmi
+- `02-TECH-STACK.md` — digantikan versi Railway
+- `CLAUDE.md` — kemas kini rujukan hosting + nota §7
+- `PROGRESS.md` — ditulis semula ikut Fasa 0–10 rasmi
+- `lib/data-dummy.ts` — namakan semula daripada `dummy-data.ts`, buang fungsi bertindih
+- `lib/data.ts` — baru, lapisan capaian data
+
+### Keputusan yang diambil
+- **`DEV-LOG.md` kekal sebagai fail log rasmi**, walaupun `09-BUILD-PHASES.md` menyebut `WORK-LOG.md` beberapa kali. `CLAUDE.md` (fail yang sama menyebut format log dalam §3) menang bila dokumen bercanggah, ikut peraturan baris pertama `CLAUDE.md` sendiri. Tiada fail `WORK-LOG.md` baru dicipta.
+- **Tiada perubahan kod diperlukan untuk tukar hosting ke Railway** pada peringkat ini — Next.js tidak bergantung platform, dan projek ini tidak pernah ada fail konfigurasi khusus Vercel (`vercel.json` dsb.). Kesan sebenar (disconnect Vercel, connect Railway, domain, env vars) hanya berlaku pada Fasa 10.
+- **`lib/data.ts` dicipta awal (Fasa 0)** walaupun fungsi di dalamnya minimum (baru 3 fungsi) — ikut arahan eksplisit `09-BUILD-PHASES.md` supaya skrin sentiasa baca melalui satu lapisan ini, bukan terus daripada `lib/data-dummy.ts`. Fungsi tambahan (cth. simpan, padam, cari) akan ditambah pada Fasa 2/3 apabila skrin berkenaan dibina — tidak direka lebih awal daripada keperluan.
+
+### Masalah / tersekat
+- Tiada.
+
+### Langkah seterusnya
+- Fasa 0 kini **siap sepenuhnya** ikut checklist rasmi.
+- **Perlu makluman kepada pemilik projek (bukan tindakan kod):** repo GitHub `affitechlab-svg/ResitLog` mungkin sudah bersambung ke Vercel secara automatik (integrasi GitHub App). Sila semak dan putuskan sambungan itu (Vercel → Settings → Git → Disconnect) — tapi ini hanya perlu **sebelum Fasa 10**, tidak menghalang kerja sekarang.
+- Mula Fasa 1: bina komponen UI asas (`Butang`, `Medan`, `Chip`, `SegmentedControl`, `TabBar`, `Dialog`, `BlokPoster`, `KeadaanKosong`) dalam `komponen/ui/`, banding dengan `ResitLog_UI_dc.html`.
+
 ## [2026-08-11 20:45] — Setup projek Next.js + dokumentasi build
 
 **Fasa:** 0 — Setup projek *(dicadang; `09-BUILD-PHASES.md` belum diterima — lihat "Masalah / tersekat")*

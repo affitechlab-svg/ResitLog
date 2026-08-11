@@ -13,7 +13,7 @@
 | Auth | **Supabase Auth** | Emel/kata laluan + Google + Apple |
 | Simpanan fail | **Supabase Storage** | Gambar resit, bucket peribadi |
 | Bacaan resit | **Anthropic Claude API** melalui route handler | Baca resit Malaysia lebih baik daripada OCR biasa |
-| Hosting | **Vercel** | Sepadan dengan Next.js, domain custom `resitlog.my` |
+| Hosting | **Railway** | Membenarkan penggunaan komersial pada plan murah; domain custom `resitlog.my` |
 | Ikon | **lucide-react** | Stroke 2px, sepadan dengan reka bentuk |
 | Font | **Archivo** via `next/font/google` | Font tunggal projek |
 
@@ -185,7 +185,15 @@ Pelayar                      Server                    Anthropic
 
 ## 9. Penempatan
 
-- **Vercel**, sambung ke repo Git.
-- Cawangan `main` → produksi (`resitlog.my`). Cawangan lain → pratonton automatik.
-- Pemboleh ubah persekitaran ditetapkan dalam papan pemuka Vercel, bukan dalam repo.
+- **Railway**, sambung ke repo GitHub.
+- Cawangan `main` → produksi (`resitlog.my`). Cawangan lain → URL pratonton automatik.
+- Pemboleh ubah persekitaran ditetapkan dalam tab **Variables** projek Railway, bukan dalam repo.
+- Railway mengesan Next.js sendiri — tiada fail konfigurasi khas diperlukan.
+- SSL automatik melalui Let's Encrypt selepas domain custom disambung.
 - Supabase: satu projek untuk pembangunan, satu untuk produksi. Jangan uji pada data sebenar.
+
+**Kenapa Railway, bukan Vercel:** plan Hobby Vercel melarang penggunaan komersial, dan ResitLog mempunyai pakej Premium berbayar. Vercel Pro berharga USD 20/orang/bulan. Railway membenarkan penggunaan komersial bermula USD 5/bulan dengan kredit termasuk, dan mengecaj mengikut penggunaan sebenar.
+
+**Kesan pada kod:** tiada. Next.js berjalan sama pada kedua-dua platform. Perbezaan hanya pada tempat pemboleh ubah persekitaran ditetapkan dan cara domain disambung.
+
+**Nota migrasi:** repo ResitLog di GitHub kini bersambung ke Vercel. Putuskan sambungan itu (Vercel → Settings → Git → Disconnect) sebelum menyambung ke Railway, supaya tiada dua platform cuba deploy repo yang sama.
