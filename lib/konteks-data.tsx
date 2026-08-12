@@ -28,6 +28,7 @@ interface NilaiKonteksData {
   pengguna: ReturnType<typeof penggunaSemasa>;
   senaraiResit: ResitPenuh[];
   tambahResit: (butiran: DetailResitBaru) => void;
+  padamResit: (id: string) => void;
 }
 
 const KonteksData = createContext<NilaiKonteksData | null>(null);
@@ -74,9 +75,13 @@ export function PembekalDataDummy({ children }: { children: ReactNode }) {
     });
   }, [pengguna]);
 
+  const padamResit = useCallback((id: string) => {
+    setSenaraiResit((semasa) => semasa.filter((r) => r.id !== id));
+  }, []);
+
   const nilai = useMemo(
-    () => ({ pengguna, senaraiResit, tambahResit }),
-    [pengguna, senaraiResit, tambahResit],
+    () => ({ pengguna, senaraiResit, tambahResit, padamResit }),
+    [pengguna, senaraiResit, tambahResit, padamResit],
   );
 
   return <KonteksData.Provider value={nilai}>{children}</KonteksData.Provider>;

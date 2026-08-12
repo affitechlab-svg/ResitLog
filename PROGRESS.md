@@ -24,8 +24,8 @@ lihat `CLAUDE.md` §7). Fasa di bawah ikut `09-BUILD-PHASES.md` rasmi.
 ## FASA 2 — Masuk manual + simpan ✅ Siap
 - ✅ `/utama` (versi ringkas), `/manual` penuh, simpan ke state dummy — disahkan hujung-ke-hujung dalam browser
 
-## FASA 3 — Rekod dan butiran ⬜ Belum
-- ⬜ `/rekod`, `/rekod/[id]`, carian, padam
+## FASA 3 — Rekod dan butiran ✅ Siap
+- ✅ `/rekod`, `/rekod/[id]`, carian, padam — disahkan dalam browser
 
 ## FASA 4 — Ringkasan bulanan ⬜ Belum
 - ⬜ `/ringkasan` (Bulanan), penafian cukai

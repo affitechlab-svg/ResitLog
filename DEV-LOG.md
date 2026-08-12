@@ -4,6 +4,35 @@ Log pembangunan ResitLog. Entri terbaru di atas, ikut format dalam `CLAUDE.md` �
 
 ---
 
+## [2026-08-11 22:15] — Fasa 3: Rekod dan butiran
+
+**Fasa:** 3 — Rekod dan butiran
+**Status:** Siap
+
+### Apa yang dibuat
+- Tambah `kumpulanIkutBulan()` dalam `lib/data.ts` — kumpul senarai resit ikut bulan (terbaru dahulu) dengan jumlah setiap bulan.
+- Tambah `padamResit(id)` dalam `lib/konteks-data.tsx`.
+- Bina skrin **Rekod** (`/rekod`) — carian nama kedai (tidak sensitif huruf besar/kecil), senarai dikumpul ikut bulan dengan tajuk seksyen latar `surface` + jumlah bulan, baris rekod dengan sehingga 2 chip kategori + "+n" (BR-10), chip "Tiada bukti" untuk rekod manual, keadaan kosong untuk (a) tiada rekod langsung dan (b) carian tanpa hasil.
+- Bina skrin **Butiran Resit** (`/rekod/[id]`) — rujukan `#RL-xxxxxx / INVOIS ...`, nama kedai, grid meta 2×2 (tarikh belanja, cara bayar, sumber, direkod), senarai item + kategori + harga, baris Jumlah, seksyen "Gambar asal" (nota "tiada gambar" — pengendalian gambar sebenar itu Fasa 5), ikon padam → dialog pengesahan → padam → kembali ke `/rekod`. Rekod bukan milik pengguna/tiada wujud papar keadaan "tidak dijumpai".
+- Disahkan dalam browser (Playwright): senarai + kumpulan bulan + jumlah betul, buka butiran (jumlah item Mydin 42.90+58.00+12.80=113.70 padan), carian sepadan & carian tanpa hasil, padam resit benar-benar buang daripada senarai.
+- `npx tsc --noEmit`, `npm run build`, `npx eslint .` semua bersih.
+
+### Fail disentuh
+- `lib/data.ts` — tambah `kumpulanIkutBulan()`
+- `lib/konteks-data.tsx` — tambah `padamResit()`
+- `app/(app)/rekod/page.tsx` — baru
+- `app/(app)/rekod/[id]/page.tsx` — baru
+
+### Keputusan yang diambil
+- **Seksyen "Gambar asal" pada Butiran Resit tidak cuba mock gambar palsu** — hanya papar nota jujur ("tiada gambar resit" untuk rekod manual, "gambar belum tersedia" untuk rekod bergambar tanpa `gambarLaluan`) kerana `04-DATA-MODEL.md` §9 dan `09-BUILD-PHASES.md` sendiri sisih bahagian gambar ke Fasa 5. Elak bina paparan yang kelihatan berfungsi tetapi sebenarnya palsu.
+- **`/rekod/[id]` untuk id yang tiada dipapar sebagai keadaan "tidak dijumpai" dalam halaman**, bukan `notFound()` Next.js sebenar — kerana skrin ini Client Component (baca state Context). Diperhalusi bila Fasa 7 tukar kepada bacaan pelayan sebenar (`03-SITEMAP-ROUTING.md`: "Buka `/rekod/[id]` yang bukan milik pengguna → 404" akan jadi 404 HTTP sebenar pada masa itu).
+
+### Masalah / tersekat
+- Tiada.
+
+### Langkah seterusnya
+- Mula Fasa 4: skrin Ringkasan bulanan (checkpoint — tunjuk pada pemilik projek sebelum teruskan ke Fasa 5).
+
 ## [2026-08-11 21:55] — Fasa 2: Masuk manual + simpan
 
 **Fasa:** 2 — Masuk manual + simpan

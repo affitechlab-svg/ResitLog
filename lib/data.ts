@@ -3,6 +3,7 @@
 // Fasa 7: fungsi dalam fail ini ditukar untuk baca/tulis Supabase — skrin tidak berubah.
 
 import { ITEM_UJIAN, PENGGUNA_UJIAN, RESIT_UJIAN } from "@/lib/data-dummy";
+import { labelBulanTahun } from "@/lib/format";
 import type { Pengguna, ResitPenuh } from "@/jenis";
 
 export function penggunaSemasa(): Pengguna {
@@ -49,4 +50,29 @@ export function ringkasanBulan(senarai: ResitPenuh[], kunciBulan: string): Ringk
     bilanganResit: resitBulan.length,
     bilanganKategori: kategoriUnik.size,
   };
+}
+
+export interface KumpulanBulan {
+  kunciBulan: string;
+  label: string;
+  jumlah: number;
+  resit: ResitPenuh[];
+}
+
+// Kumpulkan senarai (sudah ditapis carian, jika ada) ikut bulan — terbaru dahulu.
+// Guna untuk skrin Rekod (03-SITEMAP-ROUTING.md #08).
+export function kumpulanIkutBulan(senarai: ResitPenuh[]): KumpulanBulan[] {
+  const kumpulan = new Map<string, ResitPenuh[]>();
+  for (const r of senarai) {
+    const kunci = r.tarikh.slice(0, 7);
+    kumpulan.set(kunci, [...(kumpulan.get(kunci) ?? []), r]);
+  }
+  return [...kumpulan.entries()]
+    .sort((a, b) => b[0].localeCompare(a[0]))
+    .map(([kunciBulan, resit]) => ({
+      kunciBulan,
+      label: labelBulanTahun(`${kunciBulan}-01`),
+      jumlah: resit.reduce((jum, r) => jum + r.jumlah, 0),
+      resit,
+    }));
 }
