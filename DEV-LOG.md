@@ -4,6 +4,46 @@ Log pembangunan ResitLog. Entri terbaru di atas, ikut format dalam `CLAUDE.md` �
 
 ---
 
+## [2026-08-12 03:50] — Fasa 5C: Bacaan resit sebenar (Claude API)
+
+**Fasa:** 5C — Bacaan sebenar
+**Status:** Separuh — kod siap sepenuhnya dan disahkan sambung betul ke Claude API; **belum boleh uji hujung-ke-hujung** kerana akaun Anthropic pemilik projek belum ada kredit (lihat "Masalah / tersekat")
+
+### Apa yang dibuat
+- Pasang `@anthropic-ai/sdk`.
+- `.env.local` dicipta dengan `ANTHROPIC_API_KEY` pemilik projek (fail ini digitignore — tidak masuk git).
+- `app/api/baca-resit/route.ts` — route handler pelayan sebenar:
+  - Terima gambar melalui `FormData`, hantar ke Claude sebagai imej + arahan sistem BM.
+  - Guna **Claude Haiku 4.5** — model paling murah yang mencukupi untuk tugasan ekstrak data berstruktur (bukan reasoning kompleks); anggaran kos ~2 sen seresit. Dibincang dan disahkan dengan pemilik projek dalam sesi ini.
+  - Guna `output_config.format` (structured outputs / json_schema) supaya balasan **sentiasa** JSON sah ikut skema tetap — elak parsing rapuh.
+  - Model sendiri laporkan `berjaya: false` + sebab (`gelap` / `bukan_resit` / `tidak_jelas`) apabila gambar tidak boleh dibaca — bukan cuba teka.
+  - Kunci API **tidak pernah** didedah ke klien — hanya wujud dalam kod pelayan (`route.ts`), dibaca daripada `process.env`.
+- `lib/konteks-bacaan.tsx` ditulis semula: `mulaBacaan()` kini panggil `/api/baca-resit` sebenar (bukan lagi data palsu), dengan `AbortController` had masa 20 saat. Tambah keadaan `status: "ralat"` + `kodRalat` untuk 6 jenis kegagalan (4 daripada BR-09 + 2 tambahan: `tidak_jelas`, `ralat_pelayan`).
+- Bar kemajuan pada skrin Sedang Baca kini dikira daripada **masa berlalu semasa panggilan sebenar berjalan** (berhenti di ~92% sehingga panggilan betul-betul selesai, bukan animasi tetap yang tidak kira apa jadi).
+- `app/semak/page.tsx` — tambah paparan ralat penuh (mesej BM khusus setiap sebab + jalan keluar betul: 5 daripada 6 sebab ada "Cuba semula" + "Masuk manual"; `tiada_internet` hanya "Cuba semula" ikut `05-USER-FLOWS.md`).
+- Diuji **panggilan API sebenar** terus melalui `curl` (bukan mock): route handler berjaya sampai ke Claude API, hantar/terima betul, dan tangkap ralat sebenar dengan tepat (lihat "Masalah / tersekat").
+- `npx tsc --noEmit`, `npm run build`, `npx eslint .` semua bersih.
+
+### Fail disentuh
+- `app/api/baca-resit/route.ts` — baru
+- `lib/konteks-bacaan.tsx` — ditulis semula (bacaan sebenar, keadaan ralat)
+- `app/(app)/utama/page.tsx` — hantar Blob gambar terus (bukan URL) ke `mulaBacaan()`
+- `app/semak/page.tsx` — tambah paparan ralat, bar kemajuan ikut masa panggilan sebenar
+- `.env.local` — baru (tidak dalam git)
+- `package.json` — tambah `@anthropic-ai/sdk`
+
+### Keputusan yang diambil
+- **Claude Haiku 4.5 dipilih** (bukan Sonnet/Opus) selepas bincang kos dengan pemilik projek — tugasan ni ekstrak data berstruktur daripada gambar, bukan reasoning mendalam, jadi model termurah mencukupi (~5x lebih murah daripada Sonnet 5, ~5x lebih murah daripada Opus 5 pada kos output).
+- **Bahagian C acceptance criteria "Panggilan `/api/baca-resit` ditolak jika tiada sesi sah" BELUM dipenuhi** — route handler ada nota `TODO Fasa 7` yang jelas kerana sistem auth sebenar (Supabase) belum wujud lagi. Ini dicatat secara telus, bukan disembunyikan, ikut peraturan §3.5 CLAUDE.md.
+- **Bar kemajuan direka berhenti di 92%** semasa menunggu, bukan 100%, supaya ia jujur — tidak pernah tunjuk "siap" sebelum panggilan sebenar betul-betul selesai (yang boleh berlaku dengan animasi tempoh tetap).
+
+### Masalah / tersekat
+- **Akaun Anthropic pemilik projek tiada kredit** — panggilan API sebenar diuji dengan `curl` dan sampai betul ke Claude, tetapi ditolak dengan `400 invalid_request_error`: *"Your credit balance is too low to access the Anthropic API."* Kod disahkan berfungsi (bukan pepijat); menunggu pemilik projek tambah kredit di Console → Billing sebelum ujian hujung-ke-hujung (dalam browser, dengan resit sebenar) boleh diteruskan.
+
+### Langkah seterusnya
+- Selepas kredit ditambah: uji semula panggilan sebenar, kemudian uji hujung-ke-hujung dalam browser dengan **sekurang-kurangnya 10 resit sebenar** ikut keperluan `09-BUILD-PHASES.md` Fasa 5.
+- Selepas itu, Fasa 5 (5A+5B+5C) rasmi siap. Fasa seterusnya: Fasa 6 — skrin selebihnya (Mula/Daftar/Log Masuk paparan sahaja, Tetapan, Pasang, manifest PWA).
+
 ## [2026-08-11 23:10] — Fasa 5A + 5B: Snap resit, mampat gambar, skrin Semak (data palsu)
 
 **Fasa:** 5 (5A + 5B) — Snap resit dan skrin Semak

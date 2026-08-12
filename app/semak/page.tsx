@@ -5,18 +5,54 @@ import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Butang, Dialog, SegmentedControl } from "@/komponen/ui";
 import SenaraiItem from "@/komponen/resit/SenaraiItem";
-import { useBacaan } from "@/lib/konteks-bacaan";
+import { useBacaan, type KodRalatBacaan } from "@/lib/konteks-bacaan";
 import { useDataResit } from "@/lib/konteks-data";
 import { formatRM } from "@/lib/format";
 import type { CaraBayar } from "@/jenis";
 import type { KodKategori } from "@/lib/kategori";
 
 const LANGKAH_BACAAN = ["Membaca kedai dan tarikh", "Membaca item", "Menyemak jumlah"];
-const TEMPOH_BACAAN_MS = 2600;
+const TEMPOH_ANIMASI_MS = 8000; // anggaran sahaja — bar berhenti di ~92% sehingga panggilan sebenar selesai
+
+const MESEJ_RALAT: Record<KodRalatBacaan, { mesej: string; bolehMasukManual: boolean }> = {
+  gelap: {
+    mesej: "Gambar terlalu gelap untuk dibaca. Cuba snap semula di tempat terang.",
+    bolehMasukManual: true,
+  },
+  bukan_resit: {
+    mesej: "Ini nampak bukan resit. Cuba gambar yang lain.",
+    bolehMasukManual: true,
+  },
+  tidak_jelas: {
+    mesej: "Resit terlalu kabur atau terpotong untuk dibaca dengan yakin. Cuba snap semula lebih dekat.",
+    bolehMasukManual: true,
+  },
+  tiada_internet: {
+    mesej: "Sambungan terputus. Cuba lagi bila ada talian.",
+    bolehMasukManual: false,
+  },
+  timeout: {
+    mesej: "Pembacaan mengambil masa terlalu lama. Cuba semula, atau masuk manual.",
+    bolehMasukManual: true,
+  },
+  ralat_pelayan: {
+    mesej: "Sistem tidak dapat memproses resit ini sekarang. Cuba semula, atau masuk manual.",
+    bolehMasukManual: true,
+  },
+};
 
 export default function HalamanSemak() {
   const router = useRouter();
-  const { status, keputusan, tandaSedia, kemaskiniKeputusan, ubahKategoriItem, batal } = useBacaan();
+  const {
+    status,
+    keputusan,
+    kodRalat,
+    gambarPratonton,
+    sumberSemasa,
+    kemaskiniKeputusan,
+    ubahKategoriItem,
+    batal,
+  } = useBacaan();
   const { tambahResit } = useDataResit();
   const [progres, setProgres] = useState(0);
   const [dialogKeluarTerbuka, setDialogKeluarTerbuka] = useState(false);
@@ -27,55 +63,84 @@ export default function HalamanSemak() {
     if (status === "kosong") router.replace("/utama");
   }, [status, router]);
 
+  // Bar kemajuan bergerak sebenar mengikut keadaan panggilan: dikira daripada
+  // masa berlalu sementara /api/baca-resit masih berjalan, berhenti di ~92%
+  // (bukan 100%) sehingga panggilan itu benar-benar selesai (Bahagian C).
   useEffect(() => {
     if (status !== "membaca") return;
     const mula = Date.now();
     setProgres(0);
     const selang = setInterval(() => {
-      const p = Math.min(100, Math.round(((Date.now() - mula) / TEMPOH_BACAAN_MS) * 100));
+      const p = Math.min(92, Math.round(((Date.now() - mula) / TEMPOH_ANIMASI_MS) * 92));
       setProgres(p);
-      if (p >= 100) {
-        clearInterval(selang);
-        tandaSedia();
-      }
     }, 120);
     return () => clearInterval(selang);
-  }, [status, tandaSedia]);
+  }, [status]);
 
-  if (status === "kosong" || !keputusan) return null;
+  useEffect(() => {
+    if (status === "sedia" || status === "ralat") setProgres(100);
+  }, [status]);
 
-  if (status === "membaca") {
+  function cubaSemula() {
+    batal();
+    router.push("/utama");
+  }
+
+  function masukManualDaripadaRalat() {
+    batal();
+    router.push("/manual");
+  }
+
+  if (status === "kosong") return null;
+
+  if (status === "membaca" || status === "ralat") {
     const langkah = progres < 40 ? 0 : progres < 80 ? 1 : 2;
+    const ralat = kodRalat ? MESEJ_RALAT[kodRalat] : null;
+
     return (
       <div className="mx-auto flex min-h-screen max-w-[480px] flex-col bg-ink text-ground">
         <div className="flex flex-1 flex-col px-6 py-8">
-          <div className="text-[11px] font-semibold uppercase tracking-wider text-maroon-tint">
-            Langkah {langkah + 1} daripada 3
-          </div>
-          <h2 className="mt-3.5 text-[34px] font-extrabold leading-tight tracking-tight">
-            Sedang baca
-            <br />
-            resit anda
-          </h2>
-          <div className="mt-3 text-[15px] text-hairline">Biasanya siap dalam 6 saat.</div>
+          {status === "membaca" ? (
+            <>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-maroon-tint">
+                Langkah {langkah + 1} daripada 3
+              </div>
+              <h2 className="mt-3.5 text-[34px] font-extrabold leading-tight tracking-tight">
+                Sedang baca
+                <br />
+                resit anda
+              </h2>
+              <div className="mt-3 text-[15px] text-hairline">Biasanya siap dalam 6 saat.</div>
 
-          <div className="mt-7 h-1.5 bg-[#3a3736]">
-            <div className="h-1.5 bg-maroon transition-[width]" style={{ width: `${progres}%` }} />
-          </div>
-          <div className="mt-2.5 flex justify-between text-xs text-hairline">
-            <span>{LANGKAH_BACAAN[langkah]}</span>
-            <span>{progres}%</span>
-          </div>
+              <div className="mt-7 h-1.5 bg-[#3a3736]">
+                <div className="h-1.5 bg-maroon transition-[width]" style={{ width: `${progres}%` }} />
+              </div>
+              <div className="mt-2.5 flex justify-between text-xs text-hairline">
+                <span>{LANGKAH_BACAAN[langkah]}</span>
+                <span>{progres}%</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-maroon-tint">
+                Pembacaan gagal
+              </div>
+              <h2 className="mt-3.5 text-[28px] font-extrabold leading-tight tracking-tight">
+                Tidak dapat baca resit
+              </h2>
+              <div className="mt-3 text-[15px] leading-relaxed text-hairline">{ralat?.mesej}</div>
+            </>
+          )}
 
-          {keputusan.gambarUrl && (
+          {gambarPratonton && (
             <div className="mt-8 border-2 border-[#4a4746] p-3.5">
               <div className="mb-3 text-[10px] font-semibold uppercase tracking-wider text-hairline">
-                {keputusan.sumber === "album" ? "Gambar dari album" : "Gambar dari kamera"}
+                {sumberSemasa === "album" ? "Gambar dari album" : "Gambar dari kamera"}
               </div>
               {/* eslint-disable-next-line @next/next/no-img-element -- object URL sementara, bukan aset dioptimumkan */}
               <img
-                src={keputusan.gambarUrl}
-                alt={`Pratonton resit sedang dibaca: ${keputusan.namaFail}`}
+                src={gambarPratonton}
+                alt="Pratonton resit yang dihantar"
                 className="h-[300px] w-full object-cover"
               />
             </div>
@@ -84,36 +149,36 @@ export default function HalamanSemak() {
           <div className="flex-1" />
 
           <div className="border-t-2 border-[#4a4746] pt-4">
-            <div className="text-[13px] text-hairline">
-              Gambar gelap atau lusuh? Anda boleh cuba semula, atau masuk butiran secara manual.
-            </div>
+            {status === "membaca" && (
+              <div className="text-[13px] text-hairline">
+                Gambar gelap atau lusuh? Anda boleh cuba semula, atau masuk butiran secara manual.
+              </div>
+            )}
             <div className="mt-3 flex gap-2.5">
               <button
                 type="button"
-                onClick={() => {
-                  batal();
-                  router.push("/utama");
-                }}
+                onClick={cubaSemula}
                 className="h-12 flex-1 border-2 border-[#6d6a68] px-4 text-left text-sm font-semibold text-ground hover:bg-white/[0.07] active:bg-white/[0.14]"
               >
-                Batal
+                {status === "ralat" ? "Cuba semula" : "Batal"}
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  batal();
-                  router.push("/manual");
-                }}
-                className="h-12 flex-1 border-2 border-maroon px-4 text-left text-sm font-semibold text-maroon-tint hover:bg-white/[0.07] active:bg-white/[0.14]"
-              >
-                Masuk manual
-              </button>
+              {(status === "membaca" || ralat?.bolehMasukManual) && (
+                <button
+                  type="button"
+                  onClick={masukManualDaripadaRalat}
+                  className="h-12 flex-1 border-2 border-maroon px-4 text-left text-sm font-semibold text-maroon-tint hover:bg-white/[0.07] active:bg-white/[0.14]"
+                >
+                  Masuk manual
+                </button>
+              )}
             </div>
           </div>
         </div>
       </div>
     );
   }
+
+  if (!keputusan) return null;
 
   const jumlahItem = keputusan.item.reduce((jum, i) => jum + i.harga, 0);
   const beza = jumlahItem - keputusan.jumlahResit;

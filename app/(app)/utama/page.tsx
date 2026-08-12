@@ -31,8 +31,7 @@ export default function HalamanUtama() {
     e.target.value = "";
     if (!fail) return;
     const blobMampat = await mampatGambar(fail);
-    const url = URL.createObjectURL(blobMampat);
-    mulaBacaan(sumber, url, fail.name);
+    mulaBacaan(sumber, blobMampat, fail.name);
     router.push("/semak");
   }
 
