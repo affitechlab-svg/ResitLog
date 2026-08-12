@@ -1,5 +1,17 @@
 // Pemformatan RM, tarikh dan nama bulan dalam Bahasa Melayu.
 
+import type { CaraBayar } from "@/jenis";
+
+const LABEL_CARA_BAYAR: Record<CaraBayar, string> = {
+  tunai: "Tunai",
+  kad: "Kad",
+  ewallet: "E-wallet",
+};
+
+export function labelCaraBayar(caraBayar: CaraBayar): string {
+  return LABEL_CARA_BAYAR[caraBayar];
+}
+
 const NAMA_BULAN = [
   "Januari", "Februari", "Mac", "April", "Mei", "Jun",
   "Julai", "Ogos", "September", "Oktober", "November", "Disember",

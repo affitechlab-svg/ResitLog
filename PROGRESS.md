@@ -21,8 +21,8 @@ lihat `CLAUDE.md` §7). Fasa di bawah ikut `09-BUILD-PHASES.md` rasmi.
 - ✅ `Butang`, `Medan`, `Chip` (isi/garis/garis putus/tint), `SegmentedControl`, `TabBar`, `Dialog`, `BlokPoster`, `KeadaanKosong`
 - ✅ Halaman ujian `/ujian-komponen` — disahkan dengan screenshot pelayar
 
-## FASA 2 — Masuk manual + simpan ⬜ Belum
-- ⬜ `/utama` (versi ringkas), `/manual` penuh, simpan ke state dummy
+## FASA 2 — Masuk manual + simpan ✅ Siap
+- ✅ `/utama` (versi ringkas), `/manual` penuh, simpan ke state dummy — disahkan hujung-ke-hujung dalam browser
 
 ## FASA 3 — Rekod dan butiran ⬜ Belum
 - ⬜ `/rekod`, `/rekod/[id]`, carian, padam

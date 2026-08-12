@@ -19,3 +19,34 @@ export function senaraiResitPenuh(): ResitPenuh[] {
 export function resitPenuhMengikutId(id: string): ResitPenuh | undefined {
   return senaraiResitPenuh().find((r) => r.id === id);
 }
+
+// "Bulan ini" semasa fasa data dummy diambil daripada resit paling terkini dalam
+// senarai (bukan jam sistem sebenar) — seed data sengaja berpusat sekitar Ogos 2026,
+// supaya UI sentiasa ada data untuk dipapar tanpa kira bila dev server dijalankan.
+// Fasa 7 (data sebenar) tukar ini kepada bulan kalendar sebenar.
+export function bulanTerkiniData(senarai: ResitPenuh[]): string {
+  const tarikhTertinggi = senarai.reduce(
+    (terkini, r) => (r.tarikh > terkini ? r.tarikh : terkini),
+    "0000-00-00",
+  );
+  return tarikhTertinggi.slice(0, 7);
+}
+
+export interface RingkasanBulan {
+  resitBulan: ResitPenuh[];
+  jumlah: number;
+  bilanganResit: number;
+  bilanganKategori: number;
+}
+
+export function ringkasanBulan(senarai: ResitPenuh[], kunciBulan: string): RingkasanBulan {
+  const resitBulan = senarai.filter((r) => r.tarikh.startsWith(kunciBulan));
+  const jumlah = resitBulan.reduce((jum, r) => jum + r.jumlah, 0);
+  const kategoriUnik = new Set(resitBulan.flatMap((r) => r.item.map((i) => i.kategori)));
+  return {
+    resitBulan,
+    jumlah,
+    bilanganResit: resitBulan.length,
+    bilanganKategori: kategoriUnik.size,
+  };
+}

@@ -4,6 +4,46 @@ Log pembangunan ResitLog. Entri terbaru di atas, ikut format dalam `CLAUDE.md` �
 
 ---
 
+## [2026-08-11 21:55] — Fasa 2: Masuk manual + simpan
+
+**Fasa:** 2 — Masuk manual + simpan
+**Status:** Siap
+
+### Apa yang dibuat
+- Cipta storan data dalam memori (`lib/konteks-data.tsx`) — Context React yang pegang senarai resit dan sediakan `tambahResit()`. Dibalut sekitar seluruh app dalam `app/layout.tsx` supaya `/manual` dan `/utama` kongsi state yang sama semasa navigasi.
+- Tambah `bulanTerkiniData()` dan `ringkasanBulan()` dalam `lib/data.ts` — kira jumlah/bilangan resit/bilangan kategori untuk sesuatu bulan (dipakai semula di Fasa 4).
+- Tambah `labelCaraBayar()` dalam `lib/format.ts`.
+- Bina `(app)/layout.tsx` — bingkai lebar 480px + TabBar melekat bawah, dikongsi oleh skrin bertab.
+- Bina skrin **Utama** (`/utama`, versi ringkas) — header RESITLOG/pakej, BlokPoster jumlah bulan ini, 3 butang aksi (Snap Resit & Muat Naik Album nyahaktif buat masa ini — akan diaktifkan Fasa 5; Masuk Manual berfungsi), senarai Terkini dengan keadaan kosong.
+- Bina skrin **Masuk Manual** penuh (`/manual`) — medan jumlah besar RM/52px dengan garis bawah maroon, medan "Untuk apa", grid 12 chip kategori (satu boleh pilih), medan tarikh (lalai hari ini), nota "tiada bukti", footer Simpan.
+- Butang Simpan nyahaktif selagi jumlah kosong/≤0 atau kategori belum dipilih (BR mudah terlepas §1.5).
+- Butang kembali pada `/manual` papar dialog amaran jika ada isian, ikut `03-SITEMAP-ROUTING.md` §6.
+- Rekod manual disimpan dengan `sumber:'manual'`, `tiadaBukti:true`, `caraBayar:'tunai'`, satu item, `pemilik:'bersama'`.
+- Ubah `/` (akar) supaya terus alih ke `/utama` — belum ada auth sebenar, pengguna dummy dianggap sentiasa log masuk.
+- Diuji dalam browser hujung-ke-hujung (Playwright): Utama → Masuk Manual → isi → Simpan → kembali ke Utama dengan jumlah bulan/bilangan resit/senarai Terkini terkemas kini serta-merta; disahkan juga keadaan nyahaktif Simpan dan dialog amaran keluar.
+- `npx tsc --noEmit`, `npm run build`, `npx eslint .` semua bersih.
+
+### Fail disentuh
+- `lib/konteks-data.tsx` — baru, storan dalam memori + `useDataResit()`
+- `lib/data.ts` — tambah `bulanTerkiniData()`, `ringkasanBulan()`
+- `lib/format.ts` — tambah `labelCaraBayar()`
+- `app/layout.tsx` — balut `<PembekalDataDummy>`
+- `app/(app)/layout.tsx` — baru, bingkai + TabBar
+- `app/(app)/utama/page.tsx` — baru
+- `app/manual/page.tsx` — baru
+- `app/page.tsx` — tukar daripada halaman letak kepada `redirect("/utama")`
+
+### Keputusan yang diambil
+- **"Bulan ini" pada fasa data dummy dikira daripada tarikh resit paling terkini dalam senarai**, bukan jam sistem sebenar — supaya UI sentiasa ada data untuk dipapar tanpa kira bila dev server dijalankan (seed data sengaja berpusat Ogos 2026). Dicatat sebagai fungsi berasingan `bulanTerkiniData()` supaya mudah dibuang bila Fasa 7 guna bulan kalendar sebenar.
+- **Snap Resit dan Muat Naik Album dipaparkan tetapi nyahaktif** buat masa ini (bukan disembunyikan) — ciri sebenarnya Fasa 5. Ini konsisten dengan gaya app menunjukkan ciri terkunci/belum sedia dengan jelas (rujuk cara Premium dipaparkan dalam reka bentuk), bukan menyembunyikannya.
+- **Butang navigasi guna `router.push()`, bukan `<Link>` membalut `<Butang>`** — elak elemen interaktif bersarang (`<button>` dalam `<a>`) yang tidak sah dari segi HTML/akses.
+
+### Masalah / tersekat
+- Tiada.
+
+### Langkah seterusnya
+- Mula Fasa 3: skrin Rekod (senarai ikut bulan + carian) dan Butiran Resit.
+
 ## [2026-08-11 21:30] — Fasa 1: Komponen UI asas
 
 **Fasa:** 1 — Komponen UI asas
