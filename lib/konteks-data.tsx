@@ -29,6 +29,7 @@ interface NilaiKonteksData {
   senaraiResit: ResitPenuh[];
   tambahResit: (butiran: DetailResitBaru) => void;
   padamResit: (id: string) => void;
+  padamSemuaResit: () => void;
 }
 
 const KonteksData = createContext<NilaiKonteksData | null>(null);
@@ -79,9 +80,14 @@ export function PembekalDataDummy({ children }: { children: ReactNode }) {
     setSenaraiResit((semasa) => semasa.filter((r) => r.id !== id));
   }, []);
 
+  // BR-08: padam semua resit, item dan gambar — akaun pengguna sendiri kekal.
+  const padamSemuaResit = useCallback(() => {
+    setSenaraiResit([]);
+  }, []);
+
   const nilai = useMemo(
-    () => ({ pengguna, senaraiResit, tambahResit, padamResit }),
-    [pengguna, senaraiResit, tambahResit, padamResit],
+    () => ({ pengguna, senaraiResit, tambahResit, padamResit, padamSemuaResit }),
+    [pengguna, senaraiResit, tambahResit, padamResit, padamSemuaResit],
   );
 
   return <KonteksData.Provider value={nilai}>{children}</KonteksData.Provider>;

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Archivo } from "next/font/google";
 import { PembekalDataDummy } from "@/lib/konteks-data";
 import { PembekalBacaan } from "@/lib/konteks-bacaan";
+import PendaftarServiceWorker from "@/komponen/PendaftarServiceWorker";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -13,6 +14,15 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   title: "ResitLog — Simpan resit belanja harian",
   description: "Snap, rekod dan jejak perbelanjaan melalui resit.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "ResitLog",
+  },
+  icons: {
+    apple: "/ikon/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -29,6 +39,7 @@ export default function RootLayout({
   return (
     <html lang="ms">
       <body className={`${archivo.variable} antialiased`}>
+        <PendaftarServiceWorker />
         <PembekalDataDummy>
           <PembekalBacaan>{children}</PembekalBacaan>
         </PembekalDataDummy>

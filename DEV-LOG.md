@@ -4,6 +4,46 @@ Log pembangunan ResitLog. Entri terbaru di atas, ikut format dalam `CLAUDE.md` �
 
 ---
 
+## [2026-08-12 05:35] — Fasa 6 siap — skrin auth, Tetapan, PWA
+
+**Fasa:** 6 — Skrin selebihnya
+**Status:** Siap
+
+### Apa yang dibuat
+- `/mula` — skrin Mula/Daftar (welcome), pilihan Sendiri (aktif) vs Pasangan (Premium, dikunci), butang Daftar akaun + Log masuk.
+- `/daftar` — borang Nama/Emel/Kata laluan, checkbox terma (ikon `Check` guna kotak isi, bukan `box-shadow` inset seperti mockup — reka bentuk global matikan box-shadow), butang Daftar dikunci sehingga semua medan + terma diisi. Google/Apple OAuth dipaparkan tapi dinyahaktifkan (belum sambung Supabase Auth, Fasa 7).
+- `/log-masuk` — borang Emel/Kata laluan, butang dikunci sehingga kedua medan diisi.
+- Kelakuan submit (paparan sahaja, belum ada backend sebenar): Daftar → `/pasang` (aliran pengguna baru kali pertama ikut carta navigasi 03-SITEMAP-ROUTING §5); Log masuk → terus `/utama` (pengguna sedia ada, tajuk skrin "Selamat kembali").
+- `/tetapan` — seksyen Akaun (nama, tarikh mula, mod), baris Pakej + butang Naik Premium (Basic sahaja, tiada onClick — ciri bayaran belum dibina, ikut corak sedia ada di `/ringkasan`), seksyen Data (Jumlah rekod sebenar dari state, Eksport Excel + Mod pasangan dikunci dengan ikon `Lock` + chip PREMIUM untuk Basic — kekal kelihatan ikut peraturan "jangan sembunyikan"), seksyen Bantuan (Tambah ke Skrin Utama → `/pasang`; Soalan lazim/Hubungi kami statik, tiada destinasi dalam skop PRD v1), kotak "Padam semua data" sempadan maroon dengan Dialog taip-semula "PADAM" (BR-08), footer versi app.
+- Tambah `padamSemuaResit()` dalam `lib/konteks-data.tsx` — kosongkan `senaraiResit` state, akaun pengguna kekal.
+- `/pasang` — pratonton ikon shortcut (RL, kotak maroon 64px), langkah iPhone/Safari (3) dan Android/Chrome (2), butang "Tambah sekarang" sambung ke event `beforeinstallprompt` sebenar (Chrome/Android memicu prompt pasang sebenar; Safari tiada API jadi ikut arahan manual), butang "Nanti" kembali ke halaman sebelumnya.
+- PWA: `app/manifest.ts` (nama, `display: standalone`, `theme_color: #6e1428`, ikon 192/512), ikon dijana dengan Python/PIL (`public/ikon/icon-192.png`, `icon-512.png`, `apple-touch-icon.png` — petak marun dengan huruf "RL"), `public/sw.js` (service worker cache shell app: rangkaian-dahulu untuk navigasi + cache ikon), didaftar melalui komponen client `komponen/PendaftarServiceWorker.tsx` dalam root layout.
+
+### Fail disentuh
+- `app/(auth)/mula/page.tsx`, `app/(auth)/daftar/page.tsx`, `app/(auth)/log-masuk/page.tsx` — skrin baru.
+- `app/(app)/tetapan/page.tsx` — skrin baru.
+- `app/pasang/page.tsx` — skrin baru.
+- `app/manifest.ts`, `public/sw.js`, `komponen/PendaftarServiceWorker.tsx`, `public/ikon/*.png` — baru.
+- `app/layout.tsx` — daftar manifest, apple-touch-icon, `appleWebApp`, komponen pendaftar SW.
+- `lib/konteks-data.tsx` — tambah `padamSemuaResit()`.
+
+### Keputusan yang diambil
+- Butang OAuth (Google/Apple) pada `/daftar` dan `/log-masuk` dipaparkan (ikut mockup, jangan sembunyikan ciri) tetapi dinyahaktifkan kerana panggilan sebenar perlukan Supabase Auth (Fasa 7). Butang emel/kata laluan pula aktif dan navigasi terus (simulasi kejayaan) kerana ia setanding dengan cara data dummy lain berfungsi dalam fasa tempatan ini — tiada backend palsu yang mengelirukan pengguna, cuma navigasi maju.
+- Baris "Tambah ke Skrin Utama" ditambah dalam `/tetapan` walaupun mockup skrin 11 tidak menunjukkannya secara eksplisit — diperlukan oleh `06-ACCEPTANCE-CRITERIA.md` Bahagian J ("`/pasang` boleh dibuka semula dari Tetapan"). Diletak dalam seksyen Bantuan supaya tidak ganggu susun atur asal.
+- "Jumlah rekod" pada `/tetapan` hanya papar bilangan resit sebenar (cth. "6 resit"), bukan saiz storan (GB) seperti dalam mockup — kerana saiz storan tidak boleh dikira dengan tepat dalam fasa data dummy tanpa Supabase Storage sebenar. Papar nombor palsu dianggap mengelirukan; ditinggalkan sehingga Fasa 7.
+- Checkbox terma pada `/daftar` guna ikon `Check` putih dalam kotak marun (bukan `box-shadow: inset` seperti dalam mockup) kerana `box-shadow: none !important` dikuatkuasakan global ikut CLAUDE.md §1.2 — pendekatan alternatif kekal dalam had reka bentuk (tiada bayang, tiada radius).
+- Baris "Soalan lazim" dan "Hubungi kami" pada `/tetapan` kekal statik (tiada `onClick`) kerana tiada halaman FAQ/hubungi dalam skop `01-PRD.md` v1 — elak bina laluan yang tiada dalam skop.
+
+### Masalah / tersekat
+- Tiada per-halaman `<title>` Bahasa Melayu (ikut jadual `03-SITEMAP-ROUTING.md` §8) pada mana-mana skrin client component — ini jurang sedia ada merentasi keseluruhan app (bukan spesifik Fasa 6), kerana semua skrin guna `"use client"` dan metadata Next.js hanya boleh eksport dari Server Component. Perlu direfaktor (pisah wrapper server + child client) jika nak dibetulkan — dicatat di sini supaya tidak disenyapkan, belum diselesaikan.
+- Resit fizikal sebenar yang pemilik projek hantar terus dalam chat (kedai "C-Mart 7") tidak dapat diakses sebagai fail pada sistem — tiada laluan fail yang boleh dicapai `curl`/Playwright. Ujian OCR dengan resit sebenar masih tertunda; disyorkan uji terus melalui app yang sedang berjalan bila boleh.
+
+### Langkah seterusnya
+- Fasa 7: sambung Supabase sebenar (Auth emel/Google/Apple, DB + RLS, Storage) — gantikan navigasi simulasi pada `/daftar`/`/log-masuk` dengan panggilan sebenar, dan gantikan `lib/data.ts` + `lib/konteks-data.tsx` daripada dummy kepada Supabase.
+- Uji pemasangan PWA sebenar pada peranti Android/Chrome dan iPhone/Safari sebaik sahaja app boleh dicapai melalui HTTPS awam (Railway, Fasa 10) — `beforeinstallprompt` tidak boleh diuji sepenuhnya pada localhost/HTTP.
+
+---
+
 ## [2026-08-12 04:05] — Fasa 5C disahkan hujung-ke-hujung — Fasa 5 rasmi siap
 
 **Fasa:** 5C — Bacaan sebenar

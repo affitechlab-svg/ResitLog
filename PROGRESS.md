@@ -36,8 +36,12 @@ lihat `CLAUDE.md` §7). Fasa di bawah ikut `09-BUILD-PHASES.md` rasmi.
 - ✅ 5B: kamera/album + mampat gambar + skrin Sedang Baca — disahkan dengan muat naik gambar sebenar
 - ✅ 5C: `/api/baca-resit` sebenar (Claude Haiku 4.5) — disahkan hujung-ke-hujung dalam browser dengan resit tiruan realistik (semua medan diekstrak tepat) + kes gagal (gambar bukan resit dikesan betul)
 
-## FASA 6 — Skrin selebihnya ⬜ Belum
-- ⬜ `/mula`, `/daftar`, `/log-masuk` (paparan sahaja), `/tetapan`, `/pasang`, manifest PWA
+## FASA 6 — Skrin selebihnya ✅ Siap
+- ✅ `/mula`, `/daftar`, `/log-masuk` (paparan sahaja — navigasi simulasi, belum sambung Supabase Auth)
+- ✅ `/tetapan` (Akaun, Pakej, Data dengan Eksport/Mod pasangan dikunci, Bantuan, Padam semua data dengan taip-semula "PADAM")
+- ✅ `/pasang` (pratonton ikon, langkah iPhone/Android, `beforeinstallprompt` sebenar)
+- ✅ `app/manifest.ts` + ikon 192/512 + `public/sw.js` (cache shell) — disahkan dalam browser
+- **Nota:** per-halaman `<title>` BM (03-SITEMAP-ROUTING §8) belum dibuat pada skrin client — jurang sedia ada merentasi semua fasa, dicatat dalam DEV-LOG untuk dibetulkan kemudian
 
 ## FASA 7 — Supabase (data sebenar) ⬜ Belum
 - ⬜ Projek Supabase, migrasi SQL + RLS, Storage, Auth (emel/Google/Apple), middleware
