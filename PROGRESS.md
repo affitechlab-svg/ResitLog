@@ -43,9 +43,10 @@ lihat `CLAUDE.md` §7). Fasa di bawah ikut `09-BUILD-PHASES.md` rasmi.
 - ✅ `app/manifest.ts` + ikon 192/512 + `public/sw.js` (cache shell) — disahkan dalam browser
 - **Nota:** per-halaman `<title>` BM (03-SITEMAP-ROUTING §8) belum dibuat pada skrin client — jurang sedia ada merentasi semua fasa, dicatat dalam DEV-LOG untuk dibetulkan kemudian
 
-## FASA 7 — Supabase (data sebenar) ⬜ Belum
-- ⬜ Projek Supabase, migrasi SQL + RLS, Storage, Auth (emel/Google/Apple), middleware
-- ⬜ Tukar `lib/data.ts` daripada dummy ke Supabase — skrin tidak berubah
+## FASA 7 — Supabase (data sebenar) 🟡 Separuh
+- ✅ 7.2 Migrasi SQL (`supabase/migrations/20260812000000_init.sql`) — jadual + RLS + Storage policy ditulis, belum dijalankan
+- ⬜ 7.1 Projek Supabase *(pemilik projek — belum dibuat)*
+- ⬜ 7.3–7.10 Jalankan migrasi, Storage, Auth (emel/Google/Apple), middleware, tukar `lib/data.ts` daripada dummy ke Supabase
 - *(Pemilik projek: buka akaun Supabase, salin kunci ke `.env.local`, daftar OAuth app)*
 
 ## FASA 8 — Premium ⬜ Belum

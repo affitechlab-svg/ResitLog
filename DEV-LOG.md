@@ -4,6 +4,35 @@ Log pembangunan ResitLog. Entri terbaru di atas, ikut format dalam `CLAUDE.md` �
 
 ---
 
+## [2026-08-12 06:10] — Fasa 7.2 disediakan — migrasi SQL Supabase
+
+**Fasa:** 7 — Supabase (data sebenar)
+**Status:** Separuh — migrasi ditulis, belum dijalankan (tunggu pemilik projek cipta projek Supabase)
+
+### Apa yang dibuat
+- Tulis `supabase/migrations/20260812000000_init.sql` — jadual `pengguna`, `isi_rumah`, `resit`, `item` ikut `04-DATA-MODEL.md` tepat (medan, jenis, lalai, FK, indeks, unik `(pengguna_id, ref)`).
+- RLS dihidupkan pada keempat-empat jadual + polisi select/insert/update/delete ikut §7 dokumen (solo lihat rekod sendiri; pasangan lihat rekod isi rumah yang sama).
+- Bucket Storage `resit-gambar` (peribadi) + polisi folder `{auth.uid()}/` untuk muat naik/baca/padam.
+- Trigger `dikemas_pada` automatik pada `resit` bila dikemas kini.
+- Trigger tambahan `selepas_daftar_auth_users` — cipta baris `pengguna` automatik lepas `auth.users` baru didaftar. Ini **tiada** dalam `04-DATA-MODEL.md` secara eksplisit tetapi diperlukan supaya setiap pengguna log masuk ada profil sepadan; dicatat di sini secara telus ikut peraturan §3.5 CLAUDE.md.
+- Sahkan pendirian hosting: **Railway kekal** (bukan Vercel) — pemilik projek sahkan semula selepas tanya, walaupun senarai semakan rahsia yang ditampal sebut Vercel. Tiada perubahan kod akibat ini setakat ini (Railway belum disambung, Fasa 10).
+
+### Fail disentuh
+- `supabase/migrations/20260812000000_init.sql` — baru.
+
+### Keputusan yang diambil
+- Trigger auto-cipta profil `pengguna` (lihat atas) — keputusan teknikal perlu, bukan silap skema.
+- Migrasi ditulis dahulu tanpa projek Supabase sebenar supaya boleh terus dijalankan sebaik sahaja pemilik projek cipta projek dan beri kunci — elak lengah menunggu.
+
+### Masalah / tersekat
+- Migrasi belum dijalankan — perlukan pemilik projek cipta projek Supabase dahulu (7.1, tindakan pemilik projek, bukan boleh dibuat oleh saya).
+
+### Langkah seterusnya
+- Pemilik projek: cipta projek Supabase, jalankan migrasi, beri URL + kunci.
+- Selepas itu: sambung Auth (emel dahulu, kemudian Google/Apple), middleware, tukar `lib/data.ts` daripada dummy ke Supabase.
+
+---
+
 ## [2026-08-12 05:35] — Fasa 6 siap — skrin auth, Tetapan, PWA
 
 **Fasa:** 6 — Skrin selebihnya
