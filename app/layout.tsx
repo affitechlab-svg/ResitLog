@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo } from "next/font/google";
 import { PembekalDataDummy } from "@/lib/konteks-data";
+import { PembekalBacaan } from "@/lib/konteks-bacaan";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -28,7 +29,9 @@ export default function RootLayout({
   return (
     <html lang="ms">
       <body className={`${archivo.variable} antialiased`}>
-        <PembekalDataDummy>{children}</PembekalDataDummy>
+        <PembekalDataDummy>
+          <PembekalBacaan>{children}</PembekalBacaan>
+        </PembekalDataDummy>
       </body>
     </html>
   );

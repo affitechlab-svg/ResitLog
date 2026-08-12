@@ -1,20 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { Search } from "lucide-react";
-import { Chip, KeadaanKosong } from "@/komponen/ui";
+import { KeadaanKosong } from "@/komponen/ui";
+import BarisResit from "@/komponen/resit/BarisResit";
 import { useDataResit } from "@/lib/konteks-data";
 import { kumpulanIkutBulan } from "@/lib/data";
-import { formatRM, formatTarikh } from "@/lib/format";
-import { namaKategori, type KodKategori } from "@/lib/kategori";
-import type { ResitPenuh } from "@/jenis";
-
-const BILANGAN_CHIP_KATEGORI_MAKS = 2;
-
-function kategoriUnikResit(resit: ResitPenuh): KodKategori[] {
-  return [...new Set(resit.item.map((i) => i.kategori))];
-}
+import { formatRM } from "@/lib/format";
 
 export default function HalamanRekod() {
   const { senaraiResit } = useDataResit();
@@ -57,52 +49,14 @@ export default function HalamanRekod() {
       ) : (
         kumpulan.map((bulan) => (
           <div key={bulan.kunciBulan}>
-            <div className="flex items-baseline justify-between bg-surface px-5 py-3 border-b border-hairline">
+            <div className="flex items-baseline justify-between border-b border-hairline bg-surface px-5 py-3">
               <span className="text-xs font-extrabold uppercase tracking-wider">{bulan.label}</span>
               <span className="text-[13px] font-extrabold">{formatRM(bulan.jumlah)}</span>
             </div>
-            <div className="flex flex-col">
-              {bulan.resit.map((r) => {
-                const kategori = kategoriUnikResit(r);
-                const kategoriDipapar = kategori.slice(0, BILANGAN_CHIP_KATEGORI_MAKS);
-                const bakiKategori = kategori.length - kategoriDipapar.length;
-
-                return (
-                  <Link
-                    key={r.id}
-                    href={`/rekod/${r.id}`}
-                    className="flex justify-between gap-3 border-b border-hairline px-5 py-3.5"
-                  >
-                    <div>
-                      <div className="text-base font-semibold text-ink">{r.kedai}</div>
-                      <div className="mt-1.5 flex flex-wrap gap-1.5">
-                        {kategoriDipapar.map((k) => (
-                          <Chip key={k} varian="tint" className="px-[7px] py-[3px] text-[11px]">
-                            {namaKategori(k)}
-                          </Chip>
-                        ))}
-                        {bakiKategori > 0 && (
-                          <Chip varian="tint" className="px-[7px] py-[3px] text-[11px]">
-                            +{bakiKategori}
-                          </Chip>
-                        )}
-                        {r.tiadaBukti && (
-                          <Chip
-                            varian="garis"
-                            className="border-maroon px-[6px] py-[2px] text-[11px] text-maroon"
-                          >
-                            Tiada bukti
-                          </Chip>
-                        )}
-                      </div>
-                    </div>
-                    <div className="shrink-0 text-right">
-                      <div className="text-base font-extrabold text-ink">{formatRM(r.jumlah)}</div>
-                      <div className="mt-1 text-xs text-muted">{formatTarikh(r.tarikh)}</div>
-                    </div>
-                  </Link>
-                );
-              })}
+            <div className="flex flex-col px-5">
+              {bulan.resit.map((r) => (
+                <BarisResit key={r.id} resit={r} />
+              ))}
             </div>
           </div>
         ))

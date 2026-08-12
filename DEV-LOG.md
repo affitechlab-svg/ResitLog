@@ -4,6 +4,44 @@ Log pembangunan ResitLog. Entri terbaru di atas, ikut format dalam `CLAUDE.md` �
 
 ---
 
+## [2026-08-11 23:10] — Fasa 5A + 5B: Snap resit, mampat gambar, skrin Semak (data palsu)
+
+**Fasa:** 5 (5A + 5B) — Snap resit dan skrin Semak
+**Status:** Siap *(5C — bacaan sebenar melalui Claude API — belum bermula, perlukan `ANTHROPIC_API_KEY`)*
+
+### Apa yang dibuat
+- `lib/gambar.ts` — `mampatGambar()`: resize kanvas ke lebar maksimum 1400px, kualiti mula 0.82, kurangkan kualiti lagi (maks 5 percubaan) jika masih melebihi 300KB.
+- `lib/konteks-bacaan.tsx` — storan sementara alir Snap/Album → Sedang Baca → Semak. `mulaBacaan()` jana **keputusan bacaan palsu** menggunakan data seed Mydin tepat (`04-DATA-MODEL.md` §8: 42.90+58.00+12.80=113.70), dengan Panadol sengaja tiada kategori supaya alir "Pilih kategori" (BR-02) boleh diuji — sama seperti skrin 06 dalam `ResitLog_UI_dc.html`.
+- `komponen/resit/PemilihKategori.tsx`, `SenaraiItem.tsx`, `BarisResit.tsx` — 3 komponen khusus resit ikut struktur folder rasmi dalam `02-TECH-STACK.md`. `BarisResit` menggantikan kod yang bertindih dalam `/rekod` dan `/utama`.
+- Skrin **Utama**: butang Snap Resit dan Muat Naik Album kini **berfungsi** (bukan lagi nyahaktif) — buka input fail (`capture="environment"` untuk kamera, tanpa `capture` untuk album), mampat gambar, mula bacaan palsu, alih ke `/semak`.
+- Skrin **`/semak`** (satu laluan, dua keadaan ikut status):
+  - **Sedang Baca** — skrin ink `#201e1d` penuh, bar kemajuan **bergerak sebenar** (dikira daripada masa berlalu, bukan animasi tetap), pratonton gambar yang dimuat naik, butang Batal dan Masuk manual.
+  - **Semak Resit** — semua medan resit boleh diedit (kedai, no. invois, tarikh, jumlah bersempadan maroon), SegmentedControl cara bayar, senarai item dengan chip kategori (tint bila dipilih, garis putus maroon bila belum — via `PemilihKategori`), footer jumlah item dikira semula secara langsung, **beza dipaparkan** bila jumlah item ≠ jumlah pada resit (BR-03), butang Simpan nyahaktif selagi ada item tanpa kategori (BR-02), "Lihat gambar" buka pratonton penuh skrin, dialog amaran bila keluar sebelum simpan.
+  - `/semak` tanpa sesi bacaan aktif → alih ke `/utama` (ikut `03-SITEMAP-ROUTING.md` §4).
+- Disahkan **hujung ke hujung dalam browser** dengan gambar ujian sebenar (Playwright, `setFiles`): muat naik → Sedang Baca (bar bergerak) → Semak (data Mydin terisi) → uji beza jumlah (RM120 vs RM113.70 → mesej beza RM6.30 betul) → pilih kategori Panadol → Simpan → kembali ke Utama dengan rekod baru muncul dalam Terkini.
+- **Dibetulkan semasa ujian:** butang "Batal"/"Masuk manual" pada skrin gelap asalnya guna varian `garis` Butang + `className` untuk timpa warna — tapi kelas Tailwind dari varian menewaskan kelas timpaan (susunan dalam helaian gaya terjana, bukan susunan dalam `class=""`, yang tentukan kemenangan), jadi butang jadi tak kelihatan (teks/sempadan gelap atas gelap). Dibetulkan dengan tulis dua butang ini terus sebagai `<button>` biasa dalam `app/semak/page.tsx`, elak pertembungan kelas sama sekali.
+- `npx tsc --noEmit`, `npm run build`, `npx eslint .` semua bersih.
+
+### Fail disentuh
+- `lib/gambar.ts` — baru
+- `lib/konteks-bacaan.tsx` — baru
+- `komponen/resit/PemilihKategori.tsx`, `SenaraiItem.tsx`, `BarisResit.tsx` — baru
+- `app/(app)/utama/page.tsx` — aktifkan Snap/Album, guna `BarisResit`
+- `app/(app)/rekod/page.tsx` — guna `BarisResit` (buang kod bertindih)
+- `app/semak/page.tsx` — baru
+- `app/layout.tsx` — tambah `<PembekalBacaan>`
+
+### Keputusan yang diambil
+- **Bacaan Fasa 5A/5B 100% palsu (data Mydin seed tetap)**, tidak cuba mock pelbagai jenis resit. Ini ikut arahan eksplisit 5A: "Gunakan data Mydin dari seed". Bacaan sebenar (pelbagai resit, ralat OCR sebenar) itu Fasa 5C.
+- **Gambar hanya disimpan sebagai `blob:` URL dalam memori pelayar** (bukan dimuat naik ke mana-mana), dipadam (`URL.revokeObjectURL`) bila sesi bacaan dibatalkan/disiapkan. Ini konsisten dengan "tiada Supabase Storage lagi" dan peraturan "gambar dimuat naik hanya selepas Simpan" — memandangkan storan sebenar belum wujud, rekod yang disimpan set `gambarLaluan: null` buat masa ini.
+- **3 komponen `komponen/resit/`** (PemilihKategori, SenaraiItem, BarisResit) dicipta ikut nama tepat dalam `02-TECH-STACK.md` §2, bukan nama pilihan sendiri — supaya struktur kod sepadan dokumen rujukan.
+
+### Masalah / tersekat
+- Tiada.
+
+### Langkah seterusnya
+- **Fasa 5C perlukan tindakan pemilik projek:** dapatkan kunci API Anthropic (https://console.anthropic.com), letak dalam `.env.local` sebagai `ANTHROPIC_API_KEY=...` (rujuk `.env.local.example`). Beritahu saya bila sudah sedia, dan saya akan bina route handler `/api/baca-resit` + sambungkan bacaan sebenar, gantikan `janaKeputusanPalsu()`.
+
 ## [2026-08-11 22:35] — Fasa 4: Ringkasan bulanan (checkpoint)
 
 **Fasa:** 4 — Ringkasan bulanan

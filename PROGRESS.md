@@ -31,10 +31,10 @@ lihat `CLAUDE.md` §7). Fasa di bawah ikut `09-BUILD-PHASES.md` rasmi.
 - ✅ `/ringkasan` (Bulanan + paywall Tahunan untuk Basic), penafian cukai — disahkan dalam browser
 - **Checkpoint aktif:** menunggu pengesahan pemilik projek sebelum mula Fasa 5
 
-## FASA 5 — Snap resit dan skrin Semak ⬜ Belum
-- ⬜ 5A: `/semak` dengan data palsu
-- ⬜ 5B: kamera/album + mampat gambar + skrin Sedang Baca
-- ⬜ 5C: `/api/baca-resit` sebenar *(perlu `ANTHROPIC_API_KEY` daripada pemilik projek)*
+## FASA 5 — Snap resit dan skrin Semak — 5A/5B ✅ Siap · 5C ⬜ Belum
+- ✅ 5A: `/semak` dengan data palsu — disahkan hujung ke hujung dalam browser
+- ✅ 5B: kamera/album + mampat gambar + skrin Sedang Baca — disahkan dengan muat naik gambar sebenar
+- ⬜ 5C: `/api/baca-resit` sebenar — **menunggu `ANTHROPIC_API_KEY` daripada pemilik projek**
 
 ## FASA 6 — Skrin selebihnya ⬜ Belum
 - ⬜ `/mula`, `/daftar`, `/log-masuk` (paparan sahaja), `/tetapan`, `/pasang`, manifest PWA
