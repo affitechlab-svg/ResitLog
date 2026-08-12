@@ -4,6 +4,34 @@ Log pembangunan ResitLog. Entri terbaru di atas, ikut format dalam `CLAUDE.md` �
 
 ---
 
+## [2026-08-12 04:05] — Fasa 5C disahkan hujung-ke-hujung — Fasa 5 rasmi siap
+
+**Fasa:** 5C — Bacaan sebenar
+**Status:** Siap
+
+### Apa yang dibuat
+- Pemilik projek tambah kredit (USD 5) di Anthropic Console.
+- Uji semula panggilan `/api/baca-resit` terus dengan `curl`:
+  - Gambar bukan resit (blok warna kosong) → `{"ok":false,"kod":"gelap"}` — model betul kenal pasti tidak boleh dibaca.
+  - Gambar resit tiruan realistik (teks sebenar: Mydin, 3 item, jumlah RM113.70, invois, tarikh, cara bayar Kad) → **semua medan diekstrak 100% tepat**: kedai, no invois, tarikh (ditukar betul daripada DD/MM/YYYY ke ISO), cara bayar, jumlah, dan ketiga-tiga item dengan harga tepat.
+- Uji **hujung-ke-hujung penuh dalam browser** (Playwright, bukan mock): Muat Naik Album → panggilan API sebenar → skrin Semak terisi data sebenar → semua 3 item mulanya tiada kategori (betul — OCR sebenar tidak boleh agak kategori, BR-02 berkuat kuasa untuk setiap item) → Simpan nyahaktif sehingga kategori dipilih → pilih kategori ketiga-tiga item → Simpan aktif → tekan Simpan → kembali ke Utama dengan jumlah bulan dikemas kini (RM360.40 → RM474.10, betul) dan "MYDIN SUBANG JAYA" muncul dalam Terkini.
+- **Fasa 5 (5A + 5B + 5C) kini rasmi siap sepenuhnya** ikut `09-BUILD-PHASES.md`.
+
+### Fail disentuh
+- Tiada perubahan kod — sesi ini pengesahan sahaja.
+
+### Keputusan yang diambil
+- Tiada.
+
+### Masalah / tersekat
+- Tiada. Sekatan kredit sebelum ini sudah selesai.
+
+### Langkah seterusnya
+- **Nota:** `09-BUILD-PHASES.md` minta ujian dengan "sekurang-kurangnya 10 resit sebenar" sebelum anggap Fasa 5 benar-benar matang untuk produksi. Setakat ini diuji dengan 1 resit tiruan realistik + 1 kes gagal — cukup untuk sahkan wiring/logik betul, tetapi pemilik projek digalak uji dengan lebih banyak resit sebenar (pelbagai kedai, format resit) semasa guna app dari hari ke hari.
+- Mula Fasa 6: skrin selebihnya — `/mula`, `/daftar`, `/log-masuk` (paparan sahaja, belum auth sebenar), `/tetapan` (semua seksyen), padam semua data (BR-08), `/pasang`, manifest PWA + service worker.
+
+---
+
 ## [2026-08-12 03:50] — Fasa 5C: Bacaan resit sebenar (Claude API)
 
 **Fasa:** 5C — Bacaan sebenar

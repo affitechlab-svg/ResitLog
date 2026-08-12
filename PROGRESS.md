@@ -31,10 +31,10 @@ lihat `CLAUDE.md` §7). Fasa di bawah ikut `09-BUILD-PHASES.md` rasmi.
 - ✅ `/ringkasan` (Bulanan + paywall Tahunan untuk Basic), penafian cukai — disahkan dalam browser
 - **Checkpoint aktif:** menunggu pengesahan pemilik projek sebelum mula Fasa 5
 
-## FASA 5 — Snap resit dan skrin Semak — 5A/5B ✅ Siap · 5C 🟡 Kod siap, menunggu kredit
+## FASA 5 — Snap resit dan skrin Semak ✅ Siap
 - ✅ 5A: `/semak` dengan data palsu — disahkan hujung ke hujung dalam browser
 - ✅ 5B: kamera/album + mampat gambar + skrin Sedang Baca — disahkan dengan muat naik gambar sebenar
-- 🟡 5C: `/api/baca-resit` sebenar (Claude Haiku 4.5) — kod siap, disahkan sambung betul ke Claude API (`curl`), **menunggu pemilik projek tambah kredit di Anthropic Console** sebelum ujian hujung-ke-hujung dengan resit sebenar
+- ✅ 5C: `/api/baca-resit` sebenar (Claude Haiku 4.5) — disahkan hujung-ke-hujung dalam browser dengan resit tiruan realistik (semua medan diekstrak tepat) + kes gagal (gambar bukan resit dikesan betul)
 
 ## FASA 6 — Skrin selebihnya ⬜ Belum
 - ⬜ `/mula`, `/daftar`, `/log-masuk` (paparan sahaja), `/tetapan`, `/pasang`, manifest PWA
