@@ -43,3 +43,10 @@ export function labelBulanTahun(iso: string): string {
   const d = new Date(iso);
   return `${NAMA_BULAN[d.getMonth()]} ${d.getFullYear()}`;
 }
+
+// Terima kunciBulan format "YYYY-MM", pulangkan kunciBulan bulan sebelumnya.
+export function bulanSebelum(kunciBulan: string): string {
+  const [tahun, bulan] = kunciBulan.split("-").map(Number);
+  const d = new Date(tahun, bulan - 2, 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}

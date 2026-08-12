@@ -4,6 +4,36 @@ Log pembangunan ResitLog. Entri terbaru di atas, ikut format dalam `CLAUDE.md` �
 
 ---
 
+## [2026-08-11 22:35] — Fasa 4: Ringkasan bulanan (checkpoint)
+
+**Fasa:** 4 — Ringkasan bulanan
+**Status:** Siap
+
+### Apa yang dibuat
+- Tambah `pecahanKategoriBulan()` dalam `lib/data.ts` — pecahan belanja ikut kategori untuk satu bulan (jumlah + peratus daripada jumlah keseluruhan), disusun besar ke kecil. Dikira semasa dipapar, tidak disimpan (ikut `04-DATA-MODEL.md` §9).
+- Tambah `bulanSebelum()` dalam `lib/format.ts` — kunci bulan sebelumnya, untuk perbandingan.
+- Bina skrin **Ringkasan** (`/ringkasan`) — SegmentedControl Bulanan/Tahunan (Tahunan berikon kunci untuk Basic), BlokPoster (jumlah bulan ini + perbandingan naik/turun berbanding bulan lepas), baris "Dashboard AI Insight" (dipaparkan tapi nyahaktif — ciri sebenar itu Fasa 9), senarai kategori dengan bar mendatar 8px berkadar peratus, kad upsell Premium, **penafian cukai wajib** (BR-05, teks penuh daripada `05-USER-FLOWS.md`).
+- Tekan **Tahunan** semasa pakej Basic memapar **paywall sebenar dalam skrin yang sama** (bukan ralat, bukan alih laman) — kad bersempadan maroon, ikon kunci, butang Naik Premium.
+- Keadaan kosong untuk bulan tanpa rekod kategori.
+- Disahkan dalam browser: kategori tersusun betul (Perubatan RM162.10 tertinggi → Makanan RM7.40 terendah), bar berkadar peratus, perbandingan "naik RM227.80 daripada Julai" dikira betul, klik Tahunan tukar ke paparan paywall.
+- `npx tsc --noEmit`, `npm run build`, `npx eslint .` semua bersih.
+
+### Fail disentuh
+- `lib/data.ts` — tambah `pecahanKategoriBulan()`
+- `lib/format.ts` — tambah `bulanSebelum()`
+- `app/(app)/ringkasan/page.tsx` — baru
+
+### Keputusan yang diambil
+- **Kategori kecil TIDAK digabung jadi satu baris "Lain-lain·..."** seperti dalam `ResitLog_UI_dc.html` (mockup gabungkan baki kategori kerana ruang skrin terhad untuk paparan statik). `09-BUILD-PHASES.md` 4.2 hanya minta "senarai kategori...disusun besar ke kecil" — tiada arahan gabung. Setiap kategori yang ada belanja bulan itu dapat barisnya sendiri; lebih tepat dan tak hilang maklumat.
+- **Guna teks penafian cukai penuh daripada `05-USER-FLOWS.md`** (Aliran E), bukan versi ringkas dalam mockup — dokumen itu tandakan ia "wajib" dengan perkataan tepat, jadi diguna sepenuhnya, bukan versi dipendekkan.
+- **Baris "Dashboard AI Insight" dipaparkan tapi nyahaktif** (opacity 0.45), konsisten dengan cara Snap Resit/Album dipaparkan di Fasa 2 — ciri sebenar (Fasa 9) belum dibina, jadi jangan pautkan ke laluan yang tidak wujud.
+
+### Masalah / tersekat
+- Tiada.
+
+### Langkah seterusnya
+- **Checkpoint ikut `09-BUILD-PHASES.md`: "Berhenti di sini dan tunjukkan pada pemilik projek."** Fasa 0-4 (asas projek, komponen UI, masuk manual, rekod & butiran, ringkasan bulanan) kini boleh dilihat penuh sebagai satu aliran kerja di `/utama → /manual → /rekod → /rekod/[id] → /ringkasan`. Menunggu pengesahan pemilik projek sebelum mula Fasa 5 (Snap resit — fasa paling berat, perlukan kunci API Anthropic).
+
 ## [2026-08-11 22:15] — Fasa 3: Rekod dan butiran
 
 **Fasa:** 3 — Rekod dan butiran

@@ -4,6 +4,7 @@
 
 import { ITEM_UJIAN, PENGGUNA_UJIAN, RESIT_UJIAN } from "@/lib/data-dummy";
 import { labelBulanTahun } from "@/lib/format";
+import { namaKategori, type KodKategori } from "@/lib/kategori";
 import type { Pengguna, ResitPenuh } from "@/jenis";
 
 export function penggunaSemasa(): Pengguna {
@@ -75,4 +76,31 @@ export function kumpulanIkutBulan(senarai: ResitPenuh[]): KumpulanBulan[] {
       jumlah: resit.reduce((jum, r) => jum + r.jumlah, 0),
       resit,
     }));
+}
+
+export interface PecahanKategori {
+  kategori: KodKategori;
+  nama: string;
+  jumlah: number;
+  peratus: number; // 0-100, nisbah kepada jumlah keseluruhan bulan itu
+}
+
+// Pecahan belanja ikut kategori untuk satu bulan, disusun besar ke kecil.
+// Guna untuk skrin Ringkasan (04-DATA-MODEL.md §9: dikira semasa dipapar, tidak disimpan).
+export function pecahanKategoriBulan(senarai: ResitPenuh[], kunciBulan: string): PecahanKategori[] {
+  const { resitBulan, jumlah: jumlahKeseluruhan } = ringkasanBulan(senarai, kunciBulan);
+  const jumlahIkutKategori = new Map<KodKategori, number>();
+  for (const r of resitBulan) {
+    for (const i of r.item) {
+      jumlahIkutKategori.set(i.kategori, (jumlahIkutKategori.get(i.kategori) ?? 0) + i.harga);
+    }
+  }
+  return [...jumlahIkutKategori.entries()]
+    .map(([kategori, jumlah]) => ({
+      kategori,
+      nama: namaKategori(kategori),
+      jumlah,
+      peratus: jumlahKeseluruhan > 0 ? (jumlah / jumlahKeseluruhan) * 100 : 0,
+    }))
+    .sort((a, b) => b.jumlah - a.jumlah);
 }

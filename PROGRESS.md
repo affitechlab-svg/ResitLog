@@ -27,9 +27,9 @@ lihat `CLAUDE.md` §7). Fasa di bawah ikut `09-BUILD-PHASES.md` rasmi.
 ## FASA 3 — Rekod dan butiran ✅ Siap
 - ✅ `/rekod`, `/rekod/[id]`, carian, padam — disahkan dalam browser
 
-## FASA 4 — Ringkasan bulanan ⬜ Belum
-- ⬜ `/ringkasan` (Bulanan), penafian cukai
-- **Checkpoint:** tunjuk pada pemilik projek sebelum teruskan ke Fasa 5
+## FASA 4 — Ringkasan bulanan ✅ Siap
+- ✅ `/ringkasan` (Bulanan + paywall Tahunan untuk Basic), penafian cukai — disahkan dalam browser
+- **Checkpoint aktif:** menunggu pengesahan pemilik projek sebelum mula Fasa 5
 
 ## FASA 5 — Snap resit dan skrin Semak ⬜ Belum
 - ⬜ 5A: `/semak` dengan data palsu
